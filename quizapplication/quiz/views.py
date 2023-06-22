@@ -1,4 +1,6 @@
 from http import client
+from bson.objectid import ObjectId
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -180,12 +182,18 @@ def add_answer_to_questions(request, question_id):
 
 
 @login_required
-def view_quiz(request, category_id):
+def view_quiz(request, quiz_id):
     try:
-        category = get_object_or_404(QuizCategory, id=category_id)
-        questions = category.get_question()
-        return render(request, "quiz/view_quiz.html", {'category': category, 'questions': questions})
-    except QuizCategory.DoesNotExist:
+        # get quiz from the database
+        db_handle = get_db_handle()[0]
+        quiz = db_handle.quizes.find_one({'_id': ObjectId(quiz_id)})
+        # print(quiz)
+        list_of_questions = list()
+        for questions in quiz['questions']:
+            list_of_questions.append(questions[0])
+        return render(request, "quiz/view_quiz.html", 
+            {'quiz': quiz, 'list_of_questions': list_of_questions })
+    except ObjectDoesNotExist:
         messages.error(request, "Quiz category does not exist.")
         return redirect('quiz:quiz_categories')
 

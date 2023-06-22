@@ -9,19 +9,28 @@
 
 <p id='timer'></p>
 </div>
-<form method="POST" action="{% url 'quiz:submit_quiz' category_id=category.id %}">
+{% comment %} {% url 'quiz:submit_quiz' category_id=category.id %} {% endcomment %}
+<form method="POST" action="">
     {% csrf_token %}
-    {% for question in questions %}
-        <h3>{{ question.content }}</h3>
-        {% for answer in question.get_answers %}
-            <input type="radio" id="{{ answer.id }}" name="question_{{ question.id }}" value="{{ answer.id }}">
-            <label for="{{ answer.id }}">{{ answer.content }}</label><br>
+        <h3>Quiz category: </h3> 
+        <p>{{ quiz.category }}</p>
+        <h3>Quiz duration: </h3> 
+        <p>{{ quiz.duration }} seconds</p>
+        <h3>Quiz continuable: </h3>
+        <p>{{ quiz.continuable }}</p>
+
+        <h2>Quiz questions</h2>
+        {% for question in list_of_questions %}
+          <p>{{ forloop.counter }}. {{ question }}</p>
         {% endfor %}
         <br>
-    {% endfor %}
-    <input type="submit" value="Submit">
+    <input type="submit" value="Update quiz"/>
 </form>
 
+<form method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Delete quiz"/>
+</form>
 
 
 <script>
@@ -63,11 +72,6 @@
     document.addEventListener("DOMContentLoaded", function () {
       handleQuizSubmission(categoryId, userScoreId, duration);
     });
-  </script>
-  
-  
-  
-  
-  
+  </script>  
   
 {% endblock %}
