@@ -27,7 +27,7 @@
     <input type="submit" value="Update quiz"/>
 </form>
 
-<form method="POST">
+<form method="POST" action="{% url 'quiz:delete_quiz' quiz.id %}">
   {% csrf_token %}
   <input type="submit" value="Delete quiz"/>
 </form>

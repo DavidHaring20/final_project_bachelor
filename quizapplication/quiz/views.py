@@ -121,20 +121,20 @@ def delete_quiz_question(request, question_id):
 
 
 @login_required
-def delete_quiz_category(request, category_id):
+def delete_quiz(request, quiz_id):
     try:
-        category = QuizCategory.objects.get(id=category_id)
-        category.delete()
+        db_handle = get_db_handle()[0]
+        db_handle.quizes.delete_one({'_id': ObjectId(quiz_id)})
         messages.success(request, "The quiz category has been deleted successfully.")
-    except Question.DoesNotExist:
+    except ObjectDoesNotExist:
         messages.error(request, "The quiz category does not exist.")
-    return redirect('quiz:show_quiz_category')
+    return redirect('quiz:quiz_index')
 
 
 @login_required
 def show_quiz_category(request):
-    quiz_categories = QuizCategory.objects.all()
-    return render(request, "quiz/show_quiz_category.html", {'quiz_categories':quiz_categories})
+    # quiz_categories = QuizCategory.objects.all()
+    return render(request, "quiz/show_quiz_category.html")
 
     
 @login_required
@@ -187,6 +187,8 @@ def view_quiz(request, quiz_id):
         # get quiz from the database
         db_handle = get_db_handle()[0]
         quiz = db_handle.quizes.find_one({'_id': ObjectId(quiz_id)})
+        quiz_id = quiz.pop('_id')
+        quiz['id'] = quiz_id
         # print(quiz)
         list_of_questions = list()
         for questions in quiz['questions']:

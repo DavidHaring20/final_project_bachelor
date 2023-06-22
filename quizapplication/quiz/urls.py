@@ -12,7 +12,8 @@ urlpatterns = [
     path('delete_quiz_question/<int:question_id>/', views.delete_quiz_question, name='delete_quiz_question'),
     path('update_quiz_category/<int:category_id>/', views.update_quiz_category, name='update_quiz_category'),
     path('show_quiz_category/', views.show_quiz_category, name='show_quiz_category'),
-    path('delete_quiz_category/<int:category_id>', views.delete_quiz_category, name='delete_quiz_category'),
+    # path('delete_quiz_category/<int:category_id>', views.delete_quiz_category, name='delete_quiz_category'),
+    path('delete_quiz/<slug:quiz_id>/', views.delete_quiz, name='delete_quiz'),
     path('add_answer_to_questions/<int:question_id>/', views.add_answer_to_questions, name='add_answer_to_questions'),
     
     
